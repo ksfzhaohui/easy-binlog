@@ -11,6 +11,12 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 import zh.binlog.bean.Header;
 import zh.binlog.util.ByteUtil;
 
+/**
+ * 数据包解码器
+ * 
+ * @author zhaohui
+ *
+ */
 public class PackageDecoder extends ByteToMessageDecoder {
 
 	private Logger logger = LoggerFactory.getLogger(PackageDecoder.class);

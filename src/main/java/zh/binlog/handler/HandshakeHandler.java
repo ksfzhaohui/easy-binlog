@@ -9,6 +9,12 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import zh.binlog.bean.Package;
 import zh.binlog.util.ByteUtil;
 
+/**
+ * 处理mysql发送的握手包
+ * 
+ * @author zhaohui
+ *
+ */
 public class HandshakeHandler extends SimpleChannelInboundHandler<Package> {
 
 	private Logger logger = LoggerFactory.getLogger(HandshakeHandler.class);
@@ -37,7 +43,7 @@ public class HandshakeHandler extends SimpleChannelInboundHandler<Package> {
 		String randomNumber2 = ByteUtil.NullTerminatedString(msg);
 		logger.info("randomNumber1 = " + randomNumber1 + ",encode = " + encode + ",randomNumber2 = " + randomNumber2);
 		logger.info("Handshake end");
-		
+
 		ctx.pipeline().remove(this);
 	}
 

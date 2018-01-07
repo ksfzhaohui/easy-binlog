@@ -2,6 +2,7 @@ package zh.binlog.bean;
 
 public class Header {
 
+	/** 包体内容长度 **/
 	private int packageLen;
 	private int sequenceId;
 
