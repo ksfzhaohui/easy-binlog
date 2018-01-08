@@ -7,6 +7,12 @@ import io.netty.buffer.ByteBuf;
 
 public class ByteUtil {
 
+	/**
+	 * 已'\0'结尾的字符串
+	 * 
+	 * @param msg
+	 * @return
+	 */
 	public static String NullTerminatedString(ByteBuf msg) {
 		msg.markReaderIndex();
 		int length = 0;
@@ -45,11 +51,18 @@ public class ByteUtil {
 	public static byte[] writeInt(int value, int length) {
 		byte[] result = new byte[length];
 		for (int i = 0; i < length; i++) {
-			result[i] = (byte) ((i >> (8 * i)) & 0xFF);
+			result[i] = (byte) ((value >> (8 * i)) & 0xFF);
 		}
 		return result;
 	}
-	
+
+	/**
+	 * 挑战随机数+密码进行加密 参考：mysql-binlog-connector-java
+	 * 
+	 * @param password
+	 * @param salt
+	 * @return
+	 */
 	public static byte[] passwordCompatibleWithMySQL411(String password, String salt) {
 		MessageDigest sha;
 		try {
@@ -76,11 +89,26 @@ public class ByteUtil {
 		return r;
 	}
 
-	public static void main(String[] args) {
-		System.out.println(4 | 512 | 32768);
-
-		System.out.println(
-				PowerType.CLIENT_LONG_FLAG | PowerType.CLIENT_PROTOCOL_41 | PowerType.CLIENT_SECURE_CONNECTION);
+	/**
+	 * 字节数组转换成十六进制字符串
+	 * 
+	 * @param src
+	 * @return
+	 */
+	public static String bytesToHexString(byte[] src) {
+		StringBuilder stringBuilder = new StringBuilder("");
+		if (src == null || src.length <= 0) {
+			return null;
+		}
+		for (int i = 0; i < src.length; i++) {
+			int v = src[i] & 0xFF;
+			String hv = Integer.toHexString(v);
+			if (hv.length() < 2) {
+				stringBuilder.append(0);
+			}
+			stringBuilder.append(hv);
+		}
+		return stringBuilder.toString();
 	}
 
 }
