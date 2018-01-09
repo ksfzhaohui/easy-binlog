@@ -3,7 +3,7 @@ package zh.binlog.handler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
-import zh.binlog.bean.DataPackage;
+import zh.binlog.dataBean.DataPackage;
 
 /**
  * 数据包编码器

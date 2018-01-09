@@ -13,25 +13,21 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import zh.binlog.util.Constants;
 
 public class ClientServer implements Runnable {
 
 	private Logger logger = LoggerFactory.getLogger(ClientServer.class);
-	private Bootstrap b;
-
-	/** mysql地址端口信息 **/
-	private String ip = "localhost";
-	private int port = 3306;
 
 	@Override
 	public void run() {
 		try {
-			b = new Bootstrap();
+			Bootstrap b = new Bootstrap();
 			b.group(new NioEventLoopGroup(1)).channel(NioSocketChannel.class)
 					.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000).option(ChannelOption.SO_KEEPALIVE, true)
 					.handler(new BinlogChannelHandler());
 
-			ChannelFuture future = b.connect(ip, port);
+			ChannelFuture future = b.connect(Constants.ip, Constants.port);
 			Channel channel = future.channel();
 			CountDownLatch countLatch = new CountDownLatch(1);
 			future.addListener(new ChannelListener(countLatch));

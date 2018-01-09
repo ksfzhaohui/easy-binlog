@@ -27,6 +27,19 @@ public class ByteUtil {
 	}
 
 	/**
+	 * 读取固定长度字符串
+	 * 
+	 * @param msg
+	 * @param bits
+	 * @return
+	 */
+	public static String readFixedLenString(ByteBuf msg, int bits) {
+		byte serverVersionBytes[] = new byte[bits];
+		msg.readBytes(serverVersionBytes);
+		return new String(serverVersionBytes);
+	}
+
+	/**
 	 * 小端字节序
 	 * 
 	 * @param src
@@ -36,7 +49,15 @@ public class ByteUtil {
 	public static int readInt(ByteBuf src, int bits) {
 		int result = 0;
 		for (int i = 0; i < bits; ++i) {
-			result |= (src.readByte() << (8 * i));
+			result |= (src.readUnsignedByte() << (8 * i));
+		}
+		return result;
+	}
+
+	public static long readLong(ByteBuf src, int bits) {
+		long result = 0;
+		for (int i = 0; i < bits; ++i) {
+			result |= (src.readUnsignedByte() << (8 * i));
 		}
 		return result;
 	}
@@ -51,7 +72,15 @@ public class ByteUtil {
 	public static byte[] writeInt(int value, int length) {
 		byte[] result = new byte[length];
 		for (int i = 0; i < length; i++) {
-			result[i] = (byte) ((value >> (8 * i)) & 0xFF);
+			result[i] = (byte) ((value >> (8 * i)) & 0x000000FF);
+		}
+		return result;
+	}
+
+	public static byte[] writeLong(long value, int length) {
+		byte[] result = new byte[length];
+		for (int i = 0; i < length; i++) {
+			result[i] = (byte) ((value >> (8 * i)) & 0x000000FF);
 		}
 		return result;
 	}
@@ -109,6 +138,10 @@ public class ByteUtil {
 			stringBuilder.append(hv);
 		}
 		return stringBuilder.toString();
+	}
+
+	public static void main(String[] args) {
+		System.out.println(CommandType.COM_BINLOG_DUMP);
 	}
 
 }

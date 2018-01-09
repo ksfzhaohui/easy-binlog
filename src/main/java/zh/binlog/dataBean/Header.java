@@ -1,4 +1,4 @@
-package zh.binlog.bean;
+package zh.binlog.dataBean;
 
 public class Header {
 

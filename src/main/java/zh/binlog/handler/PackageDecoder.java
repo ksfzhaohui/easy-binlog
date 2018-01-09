@@ -9,7 +9,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
-import zh.binlog.bean.Header;
+import zh.binlog.dataBean.Header;
 import zh.binlog.util.ByteUtil;
 
 /**
@@ -42,7 +42,7 @@ public class PackageDecoder extends ByteToMessageDecoder {
 
 		ByteBuf contentBuf = Unpooled.buffer(packageLen);
 		contentBuf.writeBytes(in.readBytes(packageLen));
-		zh.binlog.bean.DataPackage pk = new zh.binlog.bean.DataPackage(header, contentBuf);
+		zh.binlog.dataBean.DataPackage pk = new zh.binlog.dataBean.DataPackage(header, contentBuf);
 		out.add(pk);
 	}
 

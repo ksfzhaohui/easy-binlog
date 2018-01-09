@@ -1,4 +1,4 @@
-package zh.binlog.bean;
+package zh.binlog.dataBean;
 
 import io.netty.buffer.ByteBuf;
 import zh.binlog.util.ByteUtil;
@@ -22,15 +22,23 @@ public class DataPackage {
 		this.content = content;
 	}
 
+	public DataPackage(int sequenceId, Object content) {
+		this.header = new Header(0, sequenceId);
+		this.content = content;
+	}
+
 	/**
 	 * 对数据包编码
 	 * 
 	 * @param out
+	 * @throws Exception
 	 */
-	public void encodeAsByteBuf(ByteBuf out) {
-		out.writeBytes(ByteUtil.writeInt(header.getPackageLen(), 3));
+	public void encodeAsByteBuf(ByteBuf out) throws Exception {
+		IDataBean databean = (IDataBean) content;
+		byte dataBytes[] = databean.toByteArray();
+		out.writeBytes(ByteUtil.writeInt(dataBytes.length, 3));
 		out.writeByte((byte) header.getSequenceId());
-		out.writeBytes((ByteBuf) content);
+		out.writeBytes(dataBytes);
 	}
 
 	public Header getHeader() {

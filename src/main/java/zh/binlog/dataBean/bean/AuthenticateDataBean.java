@@ -1,26 +1,30 @@
-package zh.binlog.command;
+package zh.binlog.dataBean.bean;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandlerContext;
-import zh.binlog.bean.Header;
-import zh.binlog.bean.DataPackage;
+import zh.binlog.dataBean.IDataBean;
 import zh.binlog.util.ByteUtil;
 import zh.binlog.util.PowerType;
 
-public class AuthenticateCommand {
+public class AuthenticateDataBean implements IDataBean {
 
-	private static final String userName = "root";
-	private static final String password = "root";
+	/** 认证需要的用户名密码 **/
+	private String userName;
+	private String password;
+
+	/** 编码和挑战随机数 **/
 	private byte encode;
 	private String randomNumber;
 
-	public AuthenticateCommand(byte encode, String randomNumber) {
+	public AuthenticateDataBean(byte encode, String randomNumber, String userName, String password) {
 		this.encode = encode;
 		this.randomNumber = randomNumber;
+		this.userName = userName;
+		this.password = password;
 	}
 
-	public void write(ChannelHandlerContext context) {
+	@Override
+	public byte[] toByteArray() throws Exception {
 		int clientPower = PowerType.CLIENT_LONG_FLAG | PowerType.CLIENT_PROTOCOL_41
 				| PowerType.CLIENT_SECURE_CONNECTION;
 		byte clientPowerBytes[] = ByteUtil.writeInt(clientPower, 4);
@@ -33,10 +37,7 @@ public class AuthenticateCommand {
 		byte[] passwordBytes = "".equals(password) ? new byte[0]
 				: ByteUtil.passwordCompatibleWithMySQL411(password, randomNumber);
 
-		int packageLen = clientPowerBytes.length + maxLenBytes.length + encodeBytes.length + zeroBytes.length
-				+ userNameBytes.length + 1 + passwordBytes.length;
-		Header header = new Header(packageLen, 1);
-		ByteBuf byteBuf = Unpooled.buffer(packageLen);
+		ByteBuf byteBuf = Unpooled.buffer();
 		byteBuf.writeBytes(clientPowerBytes);
 		byteBuf.writeBytes(maxLenBytes);
 		byteBuf.writeBytes(encodeBytes);
@@ -44,8 +45,7 @@ public class AuthenticateCommand {
 		byteBuf.writeBytes(userNameBytes);
 		byteBuf.writeByte((byte) passwordBytes.length);
 		byteBuf.writeBytes(passwordBytes);
-		DataPackage pk = new DataPackage(header, byteBuf);
-		context.channel().writeAndFlush(pk);
+		return byteBuf.array();
 	}
 
 }

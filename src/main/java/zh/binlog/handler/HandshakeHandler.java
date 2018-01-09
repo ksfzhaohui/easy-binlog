@@ -6,9 +6,10 @@ import org.slf4j.LoggerFactory;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import zh.binlog.bean.DataPackage;
-import zh.binlog.command.AuthenticateCommand;
+import zh.binlog.dataBean.DataPackage;
+import zh.binlog.dataBean.bean.AuthenticateDataBean;
 import zh.binlog.util.ByteUtil;
+import zh.binlog.util.Constants;
 
 /**
  * 处理mysql发送的握手包
@@ -45,7 +46,9 @@ public class HandshakeHandler extends SimpleChannelInboundHandler<DataPackage> {
 		logger.info("randomNumber1 = " + randomNumber1 + ",encode = " + encode + ",randomNumber2 = " + randomNumber2);
 		logger.info("Handshake end");
 
-		new AuthenticateCommand(encode, randomNumber1 + randomNumber2).write(ctx);
+		AuthenticateDataBean dataBean = new AuthenticateDataBean(encode, randomNumber1 + randomNumber2,
+				Constants.userName, Constants.password);
+		ctx.channel().writeAndFlush(new DataPackage(1, dataBean));
 		ctx.pipeline().remove(this);
 	}
 
