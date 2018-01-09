@@ -5,7 +5,6 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import zh.binlog.handler.AuthenticateResultHandler;
 import zh.binlog.handler.BinlogEventParseHandler;
-import zh.binlog.handler.FetchBinlogNamePositionHandler;
 import zh.binlog.handler.HandshakeHandler;
 import zh.binlog.handler.PackageDecoder;
 import zh.binlog.handler.PackageEncoder;
@@ -19,8 +18,6 @@ public class BinlogChannelHandler extends ChannelInitializer<SocketChannel> {
 		cp.addLast("Encoder", new PackageEncoder());
 		cp.addLast("Handshake", new HandshakeHandler());
 		cp.addLast("AuthenticateResult", new AuthenticateResultHandler());
-		//cp.addLast("FetchBinlogNamePosition", new FetchBinlogNamePositionHandler());
-
 		cp.addLast("BinlogEventParse", new BinlogEventParseHandler());
 	}
 
