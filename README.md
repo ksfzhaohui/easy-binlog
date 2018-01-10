@@ -8,3 +8,4 @@
 [MySql Binlog事件介绍篇](https://my.oschina.net/OutOfMemory/blog/1572968)<br>
 [MySql Binlog事件数据篇](https://my.oschina.net/OutOfMemory/blog/1579454)<br>
 [Mysql通讯协议分析](https://my.oschina.net/OutOfMemory/blog/1595684)<br>
+[基于Netty模拟解析Binlog](https://my.oschina.net/OutOfMemory/blog/1605201)<br>
