@@ -11,7 +11,5 @@ public class Constants {
 	public static final String password = "root";
 
 	public static long serverId = 1;
-	public static String binlogFilename = "bin-log.000001";
-	public static long binlogPosition = 4;
 
 }

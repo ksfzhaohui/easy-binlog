@@ -9,8 +9,10 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import zh.binlog.dataBean.DataPackage;
 import zh.binlog.event.EventHeader;
 import zh.binlog.event.EventParserFactory;
+import zh.binlog.event.EventType;
 import zh.binlog.event.IEventParser;
 import zh.binlog.util.ByteUtil;
+import zh.binlog.util.NamePositionStore;
 
 /**
  * binlog事件解析类
@@ -25,8 +27,6 @@ public class BinlogEventParseHandler extends SimpleChannelInboundHandler<DataPac
 	@Override
 	protected void channelRead0(ChannelHandlerContext ctx, DataPackage datePackage) throws Exception {
 		ByteBuf contentBuf = (ByteBuf) datePackage.getContent();
-		// logger.info(ByteUtil.bytesToHexString(contentBuf.array()));
-		
 		contentBuf.skipBytes(1);
 		EventHeader header = new EventHeader();
 		header.setTimestamp(ByteUtil.readInt(contentBuf, 4));
@@ -43,6 +43,10 @@ public class BinlogEventParseHandler extends SimpleChannelInboundHandler<DataPac
 		}
 
 		parser.parse(contentBuf, header);
+		if (header.getTypeCode() != EventType.ROTATE_EVENT
+				&& header.getTypeCode() != EventType.FORMAT_DESCRIPTION_EVENT) {
+			NamePositionStore.putNamePosition(header.getNextPosition());
+		}
 	}
 
 }

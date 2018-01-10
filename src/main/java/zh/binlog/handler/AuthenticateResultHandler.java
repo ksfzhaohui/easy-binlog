@@ -1,5 +1,7 @@
 package zh.binlog.handler;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +12,7 @@ import zh.binlog.dataBean.DataPackage;
 import zh.binlog.dataBean.bean.RequestBinlogDumpDataBean;
 import zh.binlog.util.ByteUtil;
 import zh.binlog.util.Constants;
+import zh.binlog.util.NamePositionStore;
 
 /**
  * 处理mysql发送的认证结果包
@@ -26,8 +29,10 @@ public class AuthenticateResultHandler extends SimpleChannelInboundHandler<DataP
 		ByteBuf msg = (ByteBuf) dataPackage.getContent();
 		int mark = msg.readByte();
 		if (mark == 0) {
+			Map<String, String> binlongMap = NamePositionStore.getNamePosition();
 			RequestBinlogDumpDataBean dataBean = new RequestBinlogDumpDataBean(Constants.serverId,
-					Constants.binlogFilename, Constants.binlogPosition);
+					binlongMap.get(NamePositionStore.BINLOG_NAME),
+					Long.valueOf(binlongMap.get(NamePositionStore.BINLOG_POSITIION)));
 			ctx.channel().writeAndFlush(new DataPackage(0, dataBean));
 			logger.info("Authenticate success:" + ByteUtil.bytesToHexString(msg.array()));
 		} else {

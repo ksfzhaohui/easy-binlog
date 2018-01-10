@@ -7,6 +7,7 @@ import io.netty.buffer.ByteBuf;
 import zh.binlog.event.EventHeader;
 import zh.binlog.event.IEventParser;
 import zh.binlog.util.ByteUtil;
+import zh.binlog.util.NamePositionStore;
 
 public class RotateEventParser implements IEventParser {
 
@@ -21,6 +22,8 @@ public class RotateEventParser implements IEventParser {
 		String binlogName = new String(variablePart);
 
 		logger.info("binlogPosition = " + binlogPosition + ",binlogName = " + binlogName);
+
+		NamePositionStore.putNamePosition(binlogName, binlogPosition);
 	}
 
 }
